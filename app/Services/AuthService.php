@@ -45,6 +45,9 @@ class AuthService
                 'token' => $token
             ]);
         } catch (\Exception $e) {
+            if($e->getCode()== 23000){
+                return ResponseHelper::error('Email already register',500);
+            }
             return ResponseHelper::error($e->getMessage(), 500);
         }
     }
@@ -56,7 +59,6 @@ class AuthService
             if($user){
                 $user->tokens()->delete(); 
             }
-            Auth::logout();
             return ResponseHelper::success('logout successful'); 
         }catch(\Exception $e) {
             return ResponseHelper::error($e->getMessage(),500);
@@ -67,6 +69,9 @@ class AuthService
     {
         try {
             $user = $this->userRepository->findByMail($data['email']);
+            if(!$user){
+                return ResponseHelper::error('Email not found',statusCode: 404);
+            }
             $code = sprintf('%04d', random_int(0, 9999));
             Mail::to($user->email)->send(new ResetPasswordMail($code));
 

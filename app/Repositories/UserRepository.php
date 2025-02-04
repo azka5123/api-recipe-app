@@ -28,11 +28,13 @@ class UserRepository
 
     public function createResetToken(string $email, string $code): void
     {
-        \DB::table('password_reset_tokens')->insert([
-            'email' => $email,
-            'token' => $code,
-            'created_at' => now(),
-        ]);
+        \DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $email],
+            [
+                'token' => $code,
+                'created_at' => now(),
+            ]
+        );
     }
 
     public function resetTokenUser(string $email, string $token): void

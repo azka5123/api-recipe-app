@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::middleware('throttle:60,1')->group(function () {
-    Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('verify-reset-code', [AuthController::class, 'verifyResetCode']);
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
