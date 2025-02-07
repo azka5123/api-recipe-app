@@ -19,7 +19,11 @@ Route::middleware('throttle:60,1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
 
-        Route::get('/recipes',[RecipeController::class,'index']);
-        Route::get('/recipes/{id}',[RecipeController::class,'findById']);
+        Route::prefix('recipes')->group(function () {
+            Route::get('/', [RecipeController::class, 'index']);
+            Route::get('/{id}', [RecipeController::class, 'findById']);
+            Route::post('/store', [RecipeController::class, 'store']);
+
+        });
     });
 });
