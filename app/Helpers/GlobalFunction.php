@@ -10,8 +10,13 @@ class GlobalFunction
         }
         $extension = $image->getClientOriginalExtension();
         $filename = $name . '.' . $extension;
-        $path = public_path('dist/assets/img/' . $path);
+        $path = public_path('uploads/' . $path);
         $image->move($path, $filename);
         return $filename;
+    }
+
+    public static function genaratorNameFile($name)
+    {
+        return $name . '_' . uniqid();
     }
 }

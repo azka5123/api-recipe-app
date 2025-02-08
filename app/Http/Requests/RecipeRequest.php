@@ -28,8 +28,18 @@ class RecipeRequest extends FormRequest
     }
 
     /**
+     * function for get user id
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'user_id' => auth()->id(),
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
-     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -39,13 +49,11 @@ class RecipeRequest extends FormRequest
             'description' => 'required|string',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
             'cooking_duration' => 'required|integer',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'integer|exists:users,id',
 
-            // Validasi untuk array ingredients
             'ingredients' => 'required|array',
             'ingredients.*.name' => 'required|string',
 
-            // Validasi untuk array steps
             'steps' => 'required|array',
             'steps.*.description' => 'required|string',
             'steps.*.image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',

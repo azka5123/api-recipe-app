@@ -14,15 +14,18 @@ class Recipe extends Model
         'cooking_duration'
     ];
 
-    public function rUser(){
-        return $this->belongsTo(User::class);
+    public function rUser()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function rIngredient(){
+    public function rIngredient()
+    {
         return $this->hasMany(Ingredient::class);
     }
 
-    public function rStep(){
+    public function rStep()
+    {
         return $this->hasMany(Step::class);
     }
 }

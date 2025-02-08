@@ -3,27 +3,62 @@
 namespace App\Repositories;
 
 use App\Http\Resources\RecipeResource;
+use App\Models\Ingredient;
 use App\Models\Recipe;
+use App\Models\Step;
+use DB;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class RecipeRepository
 {
-
+    /**
+     * Get all recipes
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index(): AnonymousResourceCollection
     {
         $recipes = Recipe::with(['rIngredient', 'rStep', 'rUser'])->get();
         return RecipeResource::collection($recipes);
     }
 
-    public function findById(int $id): AnonymousResourceCollection
+    /**
+     * Get recipe by id
+     * @param int $id The id of the recipe
+     * @return \App\Http\Resources\RecipeResource
+     */
+    public function findById(int $id): RecipeResource
     {
-        $recipes = Recipe::with(['rIngredient', 'rStep', 'rUser'])->findOrFail($id);
-        return RecipeResource::collection($recipes);
+        $recipe = Recipe::with(['rIngredient', 'rStep', 'rUser'])->findOrFail($id);
+        return new RecipeResource($recipe);
     }
 
+    /**
+     * Store recipe
+     * @param array $data
+     * @return \App\Http\Resources\RecipeResource The stored recipe
+     */
     public function store(array $data): RecipeResource
     {
-        $recipe = Recipe::create($data)->load(['rIngredient', 'rStep', 'rUser']);
-        return new RecipeResource($recipe);
+        return DB::transaction(function () use ($data) {
+            $recipe = Recipe::create($data);
+
+            foreach ($data['ingredients'] as $ingredient) {
+                Ingredient::create([
+                    'recipe_id' => $recipe->id,
+                    'name' => $ingredient['name']
+                ]);
+            }
+
+            foreach ($data['steps'] as $step) {
+                Step::create([
+                    'recipe_id' => $recipe->id,
+                    'description' => $step['description'],
+                    'step_order' => $step['step_order'],
+                    'image' => $step['image'] ?? null
+                ]);
+            }
+
+            return new RecipeResource($recipe->load(['rIngredient', 'rStep', 'rUser']));
+        });
     }
 }

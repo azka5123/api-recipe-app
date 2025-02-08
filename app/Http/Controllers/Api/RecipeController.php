@@ -39,7 +39,6 @@ class RecipeController extends MasterApiController
      */
     public function store(RecipeRequest $request): JsonResponse
     {
-        // dd($request->validated());
         return $this->recipeService->store($request->validated());
     }
 }
