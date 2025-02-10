@@ -61,4 +61,44 @@ class RecipeRepository
             return new RecipeResource($recipe->load(['rIngredient', 'rStep', 'rUser']));
         });
     }
+
+    public function update(array $data, int $id): RecipeResource
+    {
+        return DB::transaction(function () use ($data, $id) {
+            $recipe = $this->findById($id);
+            $recipe->update($data);
+
+            Ingredient::where('recipe_id', $recipe->id)->delete();
+            Step::where('recipe_id', $recipe->id)->delete();
+
+            foreach ($data['ingredients'] as $ingredient) {
+                Ingredient::create([
+                    'recipe_id' => $recipe->id,
+                    'name' => $ingredient['name']
+                ]);
+            }
+
+            foreach ($data['steps'] as $step) {
+                Step::create([
+                    'recipe_id' => $recipe->id,
+                    'description' => $step['description'],
+                    'step_order' => $step['step_order'],
+                    'image' => $step['image'] ?? null
+                ]);
+            }
+
+            return new RecipeResource($recipe->load(['rIngredient', 'rStep', 'rUser']));
+        });
+    }
+
+    /**
+     * Delete a recipe
+     *
+     * @param int $id The id of the recipe to delete
+     */
+    public function destroy(int $id): void
+    {
+        $recipe = Recipe::find($id);
+        $recipe->delete();
+    }
 }

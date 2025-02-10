@@ -23,7 +23,7 @@ Route::middleware('throttle:60,1')->group(function () {
             Route::get('/', [RecipeController::class, 'index']);
             Route::get('/{id}', [RecipeController::class, 'findById']);
             Route::post('/store', [RecipeController::class, 'store']);
-
+            Route::delete('/destroy/{id}', [RecipeController::class, 'destroy']);
         });
     });
 });

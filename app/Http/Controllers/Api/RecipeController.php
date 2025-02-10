@@ -41,4 +41,23 @@ class RecipeController extends MasterApiController
     {
         return $this->recipeService->store($request->validated());
     }
+
+    /**
+     * Updae a  recipe
+     * @response array{success:boolean,message:string,data:App\Http\Resources\RecipeResource}
+     */
+    public function update(RecipeRequest $request, int $id): JsonResponse
+    {
+        return $this->recipeService->update($request->validated(), $id);
+    }
+
+    /**
+     * Delete a recipe
+     * @response array{success:boolean,message:string,data:array}
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        return $this->recipeService->destroy($id);
+    }
+
 }
