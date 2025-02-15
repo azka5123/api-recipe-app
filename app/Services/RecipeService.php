@@ -22,9 +22,9 @@ class RecipeService
     {
         $this->recipeRepository = $recipeRepository;
         $userId = auth()->id();
-        // Set the file path for the recipe image
+        // Set the public file path for the recipe image
         // e.g. img/recipes_image/1/
-        $this->filePath = "img/recipes_image/{$userId}/";
+        $this->filePath = "uploads/img/recipes_image/{$userId}/";
     }
 
     /**
@@ -112,7 +112,6 @@ class RecipeService
         } catch (\Exception $e) {
             // If any error, delete the uploaded images
             foreach ($uploadedImages as $image) {
-                $image = 'uploads/' . $image;
                 if (file_exists($image)) {
                     unlink($image);
                 }
@@ -127,20 +126,21 @@ class RecipeService
         $uploadedImages = [];
         try {
             $recipe = $this->recipeRepository->findById($id);
+            $removeImageExtension = preg_replace('/\.[^.]+$/', '', $recipe->image);
             if ($data['image']) {
-                $imagePath = $this->filePath;
-                $deleteImagePath = $this->filePath . $recipe->image;
+                $imagePath = $this->filePath . $removeImageExtension;
+                $deleteImagePath = $this->filePath . $removeImageExtension . '/' . $recipe->image;
                 GlobalFunction::deleteSingleImage($deleteImagePath);
-                $data['image'] = GlobalFunction::handleImageUpload($data['image'], $recipe->image, $imagePath);
+                $data['image'] = GlobalFunction::handleImageUpload($data['image'], $removeImageExtension, $imagePath);
                 $uploadedImages[] = $imagePath . '/' . $data['image'];
             }
 
             foreach ($data['steps'] as $index => $step) {
                 if (!empty($step['image'])) {
-                    $stepImagePath = $this->filePath . $recipe->image . '/steps_image';
+                    $stepImagePath = $this->filePath . $removeImageExtension . '/steps_image';
                     $existingStepImage = $recipe->rStep[$index]->image ?? null;
                     if ($existingStepImage) {
-                        $deleteStepImagePath = $this->filePath . $recipe->image . '/steps_image/' . $existingStepImage;
+                        $deleteStepImagePath = $this->filePath . $removeImageExtension . '/steps_image/' . $existingStepImage;
                         GlobalFunction::deleteSingleImage($deleteStepImagePath);
                     }
                     $data['steps'][$index]['image'] = GlobalFunction::handleImageUpload(
@@ -157,7 +157,6 @@ class RecipeService
             return ResponseHelper::success("success update recipe", $recipe);
         } catch (\Exception $e) {
             foreach ($uploadedImages as $image) {
-                $image = 'uploads/' . $image;
                 if (file_exists($image)) {
                     unlink($image);
                 }
@@ -183,9 +182,9 @@ class RecipeService
                 return ResponseHelper::error("Recipe not found", 404);
             }
 
-            // Remove the folder of the recipe image
+            // Remove the folder and subfolder of the recipe image
             $removeImageExtension = preg_replace('/\.[^.]+$/', '', $recipe->image);
-            $removeFolder = public_path('uploads/' . $this->filePath . $removeImageExtension);
+            $removeFolder = public_path($this->filePath . $removeImageExtension);
 
             // Check if the folder exists
             if (file_exists($removeFolder)) {

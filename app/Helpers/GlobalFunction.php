@@ -11,7 +11,7 @@ class GlobalFunction
             }
             $extension = $image->getClientOriginalExtension();
             $filename = $name . '.' . $extension;
-            $path = public_path('uploads/' . $path);
+            $path = public_path($path);
             $image->move($path, $filename);
             return $filename;
         } catch (\Exception $e) {
@@ -27,7 +27,7 @@ class GlobalFunction
     public static function deleteSingleImage($name)
     {
         try {
-            $path = public_path('uploads/' . $name);
+            $path = public_path($name);
             if (file_exists($path)) {
                 unlink($path);
             }
@@ -35,21 +35,5 @@ class GlobalFunction
         } catch (\Exception $e) {
             return ResponseHelper::error($e->getMessage());
         }
-    }
-
-    public static function deleteFolder($folderPath)
-    {
-        if (!is_dir($folderPath)) {
-            return false;
-        }
-
-        $files = array_diff(scandir($folderPath), array('.', '..'));
-
-        foreach ($files as $file) {
-            $filePath = $folderPath . DIRECTORY_SEPARATOR . $file;
-            is_dir($filePath) ? deleteFolder($filePath) : unlink($filePath);
-        }
-
-        return rmdir($folderPath);
     }
 }
