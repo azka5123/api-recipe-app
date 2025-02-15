@@ -6,7 +6,7 @@ services:
                 user: $USER
                 uid: 1000
             context: ./
-            dockerfile: Dockerfile
+            dockerfile: DockerFile
         image: api-recipe-app
         container_name: api-recipe-app
         restart: unless-stopped
