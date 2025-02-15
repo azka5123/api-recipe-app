@@ -1,4 +1,4 @@
-FROM joseluisq/php-fpm:8.2
+FROM php:8.2-fpm-alpine3.16
 
 ARG UID
 ARG GID
@@ -22,7 +22,7 @@ RUN sed -i "s/user = www-data/user = ${USER}/g" /usr/local/etc/php-fpm.d/www.con
 RUN sed -i "s/group = www-data/group = ${USER}/g" /usr/local/etc/php-fpm.d/www.conf
 RUN echo "php_admin_flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf
 
-RUN apk add --no-cache libpng libpng-dev jpeg-dev
+RUN apk update && apk add --no-cache libpng libpng-dev
 
 RUN docker-php-ext-configure gd --enable-gd --with-jpeg
 RUN docker-php-ext-install gd

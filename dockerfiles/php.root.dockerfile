@@ -10,7 +10,7 @@ RUN echo "php_admin_flag[log_errors] = on" >> /usr/local/etc/php-fpm.d/www.conf
 
 RUN docker-php-ext-install pdo pdo_mysql
 
-RUN apk add --no-cache libpng libpng-dev
+RUN apk update && apk add --no-cache libpng libpng-dev libjpeg-turbo-dev
 
 RUN docker-php-ext-configure gd --enable-gd --with-jpeg
 RUN docker-php-ext-install gd
