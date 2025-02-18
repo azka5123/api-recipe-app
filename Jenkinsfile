@@ -39,6 +39,7 @@ pipeline {
                 dir("/var/lib/jenkins/workspace/envs/app_recipe") {
                     fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: '.env', targetLocation: "${WORKSPACE}")])
                 }
+                sh 'ls -la'
             }
         }              
         stage("Run Tests") {
