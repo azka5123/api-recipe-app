@@ -23,11 +23,6 @@ pipeline {
                 }
             }
         }
-        stage("List Workspace Files") {
-            steps {
-                sh 'ls -la'
-            }
-        }
         stage("Start Docker") {
             steps {
                 sh 'make up'
@@ -36,7 +31,7 @@ pipeline {
         }
         stage("Run Composer Install") {
             steps {
-                sh 'docker compose run --rm composer install'
+                sh 'docker compose run --rm app composer install'
             }
         }
         stage("Populate .env file") {
@@ -48,7 +43,7 @@ pipeline {
         }              
         stage("Run Tests") {
             steps {
-                sh 'docker compose run --rm artisan test'
+                sh 'docker compose run --rm app php artisan test'
             }
         }
     }
