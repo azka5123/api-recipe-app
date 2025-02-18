@@ -25,9 +25,13 @@ pipeline {
         }
         stage("Start Docker") {
             steps {
-                sh 'git config --global --add safe.directory /var/www'
                 sh 'make up'
                 sh 'docker compose ps'
+            }
+        }
+        stage("Run Composer Install") {
+            steps {
+                sh 'docker compose run --rm app composer install'
             }
         }
         stage("Populate .env file") {
