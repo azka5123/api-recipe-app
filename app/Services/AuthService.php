@@ -45,39 +45,39 @@ class AuthService
                 'token' => $token
             ]);
         } catch (\Exception $e) {
-            if($e->getCode()== 23000){
-                return ResponseHelper::error('Email already register',500);
+            if ($e->getCode() == 23000) {
+                return ResponseHelper::error('Email already register', 500);
             }
             return ResponseHelper::error($e->getMessage(), 500);
         }
     }
 
-    public function logout (): JsonResponse
+    public function logout(): JsonResponse
     {
-        try{
-            $user = Auth::user(); 
-            if($user){
-                $user->tokens()->delete(); 
+        try {
+            $user = Auth::user();
+            if ($user) {
+                $user->tokens()->delete();
             }
-            return ResponseHelper::success('logout successful'); 
-        }catch(\Exception $e) {
-            return ResponseHelper::error($e->getMessage(),500);
+            return ResponseHelper::success('logout successful');
+        } catch (\Exception $e) {
+            return ResponseHelper::error($e->getMessage(), 500);
         }
     }
 
-    public function forgotPassword(array $data):JsonResponse
+    public function forgotPassword(array $data): JsonResponse
     {
         try {
             $user = $this->userRepository->findByMail($data['email']);
-            if(!$user){
-                return ResponseHelper::error('Email not found',statusCode: 404);
+            if (!$user) {
+                return ResponseHelper::error('Email not found', statusCode: 404);
             }
             $code = sprintf('%04d', random_int(0, 9999));
             Mail::to($user->email)->send(new ResetPasswordMail($code));
 
             $this->userRepository->createResetToken($user->email, $code);
 
-            return ResponseHelper::success('Reset link sent to your email.');
+            return ResponseHelper::success('Reset link sent to your email.', );
         } catch (\Exception $e) {
             return ResponseHelper::error($e->getMessage(), 500);
         }
@@ -119,5 +119,5 @@ class AuthService
         }
     }
 
-   
+
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Mail\ResetPasswordMail;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Mail;
@@ -16,11 +17,18 @@ class AuthTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $cekUser = User::where("email", "cobadulu769@gmail.com")->first();
+        if (!$cekUser) {
+            $this->postJson('/api/register', [
+                'email' => 'cobadulu769@gmail.com',
+                'password' => '123456',
+                'name' => 'coba',
+            ]);
+        }
         Mail::fake();
         $response = $this->postJson('/api/forgot-password', [
             'email' => 'cobadulu769@gmail.com',
         ]);
-
         $response->assertStatus(200);
         Mail::assertSent(ResetPasswordMail::class, function ($mail) {
 

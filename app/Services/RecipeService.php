@@ -85,7 +85,7 @@ class RecipeService
         try {
             $name = GlobalFunction::genaratorNameFile($data['name']);
             // If the recipe has an image, upload it
-            if ($data['image']) {
+            if (!empty($data['image'])) {
                 $imagePath = $this->filePath . $name;
                 $data['image'] = GlobalFunction::handleImageUpload($data['image'], $name, $imagePath);
                 $uploadedImages[] = $imagePath . '/' . $data['image'];
@@ -108,7 +108,7 @@ class RecipeService
             $recipe = $this->recipeRepository->store($data);
 
             // Return a success response with the recipe
-            return ResponseHelper::success("success store recipe", $recipe);
+            return ResponseHelper::success("success store recipe", $recipe, 201);
         } catch (\Exception $e) {
             // If any error, delete the uploaded images
             foreach ($uploadedImages as $image) {
@@ -127,7 +127,7 @@ class RecipeService
         try {
             $recipe = $this->recipeRepository->findById($id);
             $removeImageExtension = preg_replace('/\.[^.]+$/', '', $recipe->image);
-            if ($data['image']) {
+            if (!empty($data['image'])) {
                 $imagePath = $this->filePath . $removeImageExtension;
                 $deleteImagePath = $this->filePath . $removeImageExtension . '/' . $recipe->image;
                 GlobalFunction::deleteSingleImage($deleteImagePath);
@@ -154,7 +154,7 @@ class RecipeService
 
             $recipe = $this->recipeRepository->update($data, $id);
 
-            return ResponseHelper::success("success update recipe", $recipe);
+            return ResponseHelper::success("success update recipe", $recipe, 201);
         } catch (\Exception $e) {
             foreach ($uploadedImages as $image) {
                 if (file_exists($image)) {

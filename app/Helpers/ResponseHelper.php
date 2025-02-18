@@ -7,7 +7,8 @@ use JsonSerializable;
 
 class ResponseHelper
 {
-    public static function success(string $message, JsonSerializable|array $data, int $statusCode = 200): JsonResponse
+
+    public static function success(string $message, JsonSerializable|array $data = [], int $statusCode = 200): JsonResponse
     {
         return response()->json([
             'success' => true,

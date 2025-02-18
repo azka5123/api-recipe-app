@@ -15,7 +15,8 @@ class AuthController extends MasterApiController
 
     protected AuthService $authService;
 
-    public function __construct(AuthService $authService){
+    public function __construct(AuthService $authService)
+    {
         $this->authService = $authService;
     }
 
@@ -49,7 +50,7 @@ class AuthController extends MasterApiController
      */
     public function logout(): JsonResponse
     {
-       return $this->authService->logout();
+        return $this->authService->logout();
     }
 
     /**
@@ -71,7 +72,7 @@ class AuthController extends MasterApiController
      */
     public function verifyResetCode(VerifyResetCodeRequest $request): JsonResponse
     {
-       return $this->authService->verifyResetCode($request->validated());
+        return $this->authService->verifyResetCode($request->validated());
     }
 
     /**
@@ -82,5 +83,5 @@ class AuthController extends MasterApiController
     public function resetPassword(ResetPasswordRequest $request): JsonResponse
     {
         return $this->authService->resetPassword($request->validated());
-    }    
+    }
 }
