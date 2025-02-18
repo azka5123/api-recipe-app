@@ -23,6 +23,11 @@ pipeline {
                 }
             }
         }
+        stage("List Workspace Files") {
+            steps {
+                sh 'ls -la'
+            }
+        }
         stage("Start Docker") {
             steps {
                 sh 'make up'
