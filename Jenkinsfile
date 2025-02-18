@@ -30,11 +30,6 @@ pipeline {
                 sh 'docker compose ps'
             }
         }
-        stage("Run Composer Install") {
-            steps {
-                sh 'docker compose run --rm app composer install'
-            }
-        }
         stage("Populate .env file") {
             steps {
                 dir("/var/lib/jenkins/workspace/envs/app_recipe") {
