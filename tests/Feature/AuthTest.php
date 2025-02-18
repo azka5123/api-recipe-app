@@ -32,10 +32,11 @@ class AuthTest extends TestCase
     }
     public function test_register(): void
     {
+
         $response = $this->postJson('/api/register', [
-            'email'    => $this->faker->unique()->safeEmail(),
+            'email' => $this->faker->unique()->safeEmail(),
             'password' => 'password123',
-            'name'     => $this->faker->unique()->name(),
+            'name' => $this->faker->unique()->name(),
         ]);
 
         $response->assertStatus(200);
@@ -45,18 +46,18 @@ class AuthTest extends TestCase
     {
         $response = $this->postJson('/api/register', [
             'email' => 'invalid-mail',
-            'password'=> 'invalid-password-cause-didnt-have-number',
-            'name'=> $this->faker->unique()->name(),
+            'password' => 'invalid-password-cause-didnt-have-number',
+            'name' => $this->faker->unique()->name(),
         ]);
 
         $response->assertStatus(422);
     }
-    
+
     public function test_login(): void
     {
-        $response = $this->postJson('/api/login',[
+        $response = $this->postJson('/api/login', [
             'email' => 'cobadulu769@gmail.com',
-            'password'=> '123456',
+            'password' => '123456',
         ]);
 
         $response->assertStatus(200);
@@ -66,7 +67,7 @@ class AuthTest extends TestCase
     {
         $response = $this->postJson('/api/login', [
             'email' => 'invalid-mail',
-            'password'=> 'invalid-password',
+            'password' => 'invalid-password',
         ]);
 
         $response->assertStatus(422);
@@ -74,9 +75,9 @@ class AuthTest extends TestCase
 
     public function test_logout(): void
     {
-        $auth = $this->postJson('/api/login',[
+        $auth = $this->postJson('/api/login', [
             'email' => 'cobadulu769@gmail.com',
-            'password'=> '123456',
+            'password' => '123456',
         ]);
         $token = $auth->json('data.token');
         $this->assertNotEmpty($token);
@@ -158,7 +159,7 @@ class AuthTest extends TestCase
 
     public function test_forgot_password_with_invalid_data(): void
     {
-        $response = $this->postJson('/api/forgot-password',[
+        $response = $this->postJson('/api/forgot-password', [
             'email' => 'some@mail.com',
         ]);
 

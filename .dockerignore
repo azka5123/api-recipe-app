@@ -1,0 +1,13 @@
+# Mengabaikan direktori vendor dan node_modules
+/vendor
+/node_modules
+
+# Mengabaikan file konfigurasi lingkungan
+.env
+
+# File log
+*.log
+
+# Cache dan temporary files
+tmp
+.cache
