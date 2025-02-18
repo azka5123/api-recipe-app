@@ -31,6 +31,7 @@ pipeline {
         }
         stage("Run Composer Install") {
             steps {
+                sh 'git config --global --add safe.directory /var/www'
                 sh 'docker compose run --rm app composer install'
             }
         }
