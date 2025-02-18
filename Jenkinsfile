@@ -5,6 +5,7 @@ pipeline {
             steps {
                 sh '''
                     whoami
+                    newgrp docker
                     docker info
                     docker version
                     docker compose version
