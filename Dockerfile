@@ -14,7 +14,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Set direktori kerja
-WORKDIR /var/www
+WORKDIR /var/www/html/api_recipe
 
 # Copy file aplikasi ke dalam container
 COPY . .
