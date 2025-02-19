@@ -53,7 +53,7 @@ pipeline {
                 script {
                     def envFile = '/var/lib/jenkins/workspace/envs/app_recipe/.env'
                     if (fileExists(envFile)) {
-                        sh "cp ${envFile} ${WORKSPACE}/.env"
+                        sh "cp ${envFile} /var/www/html/api_recipe/.env"
                     } else {
                         echo "Warning: .env file not found at ${envFile}"
                     }
