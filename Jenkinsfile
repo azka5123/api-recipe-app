@@ -67,7 +67,7 @@ pipeline {
                 sh 'docker compose ps'
                 sh '''
                     echo "Waiting for MySQL to be ready..."
-                    while ! docker compose exec db mysqladmin ping -hlocalhost -ularaveluser -psecret --silent; do
+                    while ! docker compose exec db mysqladmin ping -hdb -ularaveluser -psecret --silent; do
                         sleep 1
                     done
                     echo "MySQL is ready!"
