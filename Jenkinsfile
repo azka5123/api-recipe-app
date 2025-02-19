@@ -50,9 +50,8 @@ pipeline {
 
         stage("Populate .env file") {
             steps {
+                sh 'docker compose exec app chmod -R 777 storage bootstrap/cache'
                 script {
-                    sh 'docker compose exec app chmod -R 777 storage bootstrap/cache
-'
                     def envFile = '/var/lib/jenkins/workspace/envs/app_recipe/.env'
                     if (fileExists(envFile)) {
                         sh "cp ${envFile} ${WORKSPACE}/.env"
