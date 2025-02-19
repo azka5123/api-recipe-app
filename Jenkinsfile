@@ -78,6 +78,7 @@ pipeline {
 
     post {
         success {
+            sh 'docker-compose exec app php artisan migrate --force'
             sh 'docker compose ps'
             sh 'docker-compose exec db mysql -ularaveluser -psecret -e "SHOW DATABASES;"'
         }
