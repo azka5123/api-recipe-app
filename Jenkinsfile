@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     stages {
         stage("Verify tooling") {
             steps {
@@ -12,6 +13,7 @@ pipeline {
                 '''
             }
         }
+
         stage("Clear all running docker containers") {
             steps {
                 script {
@@ -23,6 +25,7 @@ pipeline {
                 }
             }
         }
+
         stage('Checkout') {
             steps {
                 script {
@@ -31,17 +34,20 @@ pipeline {
                 }
             }
         }
+
         stage("Start Docker") {
             steps {
                 sh 'make up'
                 sh 'docker compose ps'
             }
         }
+
         stage("Run Composer Install") {
             steps {
                 sh 'docker compose run --rm app composer install'
             }
         }
+
         stage("Populate .env file") {
             steps {
                 script {
@@ -54,6 +60,25 @@ pipeline {
                 }
             }
         }
+
+        stage("Wait for Database") {
+            steps {
+                sh '''
+                    echo "Waiting for MySQL to be ready..."
+                    while ! docker compose exec db mysqladmin ping -hlocalhost -ularaveluser -psecret --silent; do
+                        sleep 1
+                    done
+                    echo "MySQL is ready!"
+                '''
+            }
+        }
+
+        stage("Run Migrations") {
+            steps {
+                sh 'docker compose run --rm app php artisan migrate --force'
+            }
+        }
+
         stage("Run Tests") {
             steps {
                 sh 'docker compose ps'
@@ -61,11 +86,12 @@ pipeline {
             }
         }
     }
+
     post {
         success {
             sh 'cd "/var/lib/jenkins/workspace/app_recipe"'
             sh 'rm -rf artifact.zip'
-            sh 'zip -r artifact.zip . -x "*node_modules**"'                              
+            sh 'zip -r artifact.zip . -x "*node_modules**"'
         }
         always {
             sh 'docker compose down --remove-orphans -v'
