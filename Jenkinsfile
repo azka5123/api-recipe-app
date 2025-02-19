@@ -79,6 +79,7 @@ pipeline {
     post {
         success {
             sh 'cd "/var/lib/jenkins/workspace/app_recipe_pipeline"'
+            sh 'docker compose ps'
         }
         // always {
         //     sh 'docker compose down --remove-orphans -v'
