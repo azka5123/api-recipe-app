@@ -80,8 +80,8 @@ pipeline {
         success {
             sh 'docker-compose exec app php artisan migrate --force'
             sh 'docker compose ps'
-            sh 'docker-compose exec db mysql -ularaveluser -psecret -e "SHOW DATABASES;"'
         }
+        
         // always {
         //     sh 'docker compose down --remove-orphans -v'
         //     sh 'docker compose ps'
