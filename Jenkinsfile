@@ -64,6 +64,7 @@ pipeline {
 
         stage("Wait for Database") {
             steps {
+                sh 'docker compose ps'
                 sh '''
                     echo "Waiting for MySQL to be ready..."
                     while ! docker compose exec db mysqladmin ping -hlocalhost -ularaveluser -psecret --silent; do
@@ -76,7 +77,6 @@ pipeline {
 
         stage("Run Tests") {
             steps {
-                sh 'cat .env'
                 sh 'docker compose ps'
                 sh 'docker-compose exec app php artisan test'
             }
