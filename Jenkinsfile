@@ -78,8 +78,8 @@ pipeline {
 
     post {
         success {
-            sh 'cd "/var/lib/jenkins/workspace/app_recipe_pipeline"'
             sh 'docker compose ps'
+            sh 'docker-compose exec db mysql -ularaveluser -psecret -e "SHOW DATABASES;"'
         }
         // always {
         //     sh 'docker compose down --remove-orphans -v'

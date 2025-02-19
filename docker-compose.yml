@@ -10,6 +10,8 @@ services:
             - ./:/var/www/html/api_recipe
         networks:
             - laravel
+        depends_on:
+            - db
 
     webserver:
         image: nginx:alpine
