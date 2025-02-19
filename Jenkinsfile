@@ -4,7 +4,7 @@ pipeline {
         stage("Verify tooling") {
             steps {
                 sh '''
-                    whoami
+                    git --version
                     newgrp docker
                     docker info
                     docker version
@@ -26,7 +26,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    sh 'git config --global --add safe.directory /var/www/html/api_recipe'
+                    sh 'git config --global --add safe.directory "*"'
                     checkout scm
                 }
             }
@@ -47,7 +47,6 @@ pipeline {
                 dir("/var/lib/jenkins/workspace/envs/app_recipe") {
                     fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: '.env', targetLocation: "${WORKSPACE}")])
                 }
-                sh 'ls -la'
             }
         }              
         stage("Run Tests") {
