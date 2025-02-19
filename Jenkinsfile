@@ -76,6 +76,7 @@ pipeline {
 
         stage("Run Tests") {
             steps {
+                sh 'ls'
                 sh 'docker compose ps'
                 sh 'docker-compose exec app php artisan test'
             }
