@@ -74,11 +74,22 @@ pipeline {
                 '''
             }
         }
+
+        stage("Migrate database"){
+            steps{
+                sh'docker-compose exec app php artisan migrate'
+            }
+        }
+
+         stage("Testing web"){
+            steps{
+                sh'docker-compose exec app php artisan test'
+            }
+        }
     }
 
     post {
         success {
-            sh 'docker-compose exec app php artisan migrate --force'
             sh 'docker compose ps'
         }
         //test cicd
