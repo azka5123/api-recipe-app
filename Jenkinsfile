@@ -78,9 +78,7 @@ pipeline {
 
     post {
         success {
-            sh 'cd "/var/lib/jenkins/workspace/app_recipe"'
-            sh 'rm -rf artifact.zip'
-            sh 'zip -r artifact.zip . -x "*node_modules**"'
+            sh 'cd "/var/lib/jenkins/workspace/app_recipe_pipeline"'
         }
         always {
             sh 'docker compose down --remove-orphans -v'
