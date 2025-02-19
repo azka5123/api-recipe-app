@@ -23,6 +23,14 @@ pipeline {
                 }
             }
         }
+        stage('Checkout') {
+            steps {
+                script {
+                    sh 'git config --global --add safe.directory /var/www/html/api_recipe'
+                    checkout scm
+                }
+            }
+        }
         stage("Start Docker") {
             steps {
                 sh 'make up'
