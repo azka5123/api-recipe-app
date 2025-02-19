@@ -44,11 +44,16 @@ pipeline {
         }
         stage("Populate .env file") {
             steps {
-                dir("/var/lib/jenkins/workspace/envs/app_recipe") {
-                    fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: '.env', targetLocation: "${WORKSPACE}")])
+                script {
+                    def envFile = '/var/lib/jenkins/workspace/envs/app_recipe/.env'
+                    if (fileExists(envFile)) {
+                        sh "cp ${envFile} ${WORKSPACE}/.env"
+                    } else {
+                        echo "Warning: .env file not found at ${envFile}"
+                    }
                 }
             }
-        }              
+        }
         stage("Run Tests") {
             steps {
                 sh 'docker compose run --rm app php artisan test'
