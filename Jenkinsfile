@@ -73,12 +73,6 @@ pipeline {
             }
         }
 
-        stage("Run Migrations") {
-            steps {
-                sh 'docker compose run --rm app php artisan migrate --force'
-            }
-        }
-
         stage("Run Tests") {
             steps {
                 sh 'docker compose ps'
